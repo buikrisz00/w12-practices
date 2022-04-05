@@ -6,8 +6,6 @@ const app = express();
 const frontend = path.join(`${__dirname}/../frontend`)
 const port = 9000;
 
-app.use("/public", express.static(`${frontend}/public`))
-
 app.get("/", (req, res, next) => {
     console.log("Request received");
     res.sendFile(`${frontend}/index.html`);
@@ -91,3 +89,5 @@ app.get("/api/v1/users/passive", (req, res) => {
 app.listen(port, () => {
     console.log(`http://127.0.0.1:${port}`);
 });
+
+app.use("/public", express.static(`${frontend}/public`))
