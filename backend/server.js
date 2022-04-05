@@ -49,25 +49,21 @@ app.get("/api/v1/users-params/:key", (req, res) => {
 })
 
 app.get("/api/v1/users/:status", (req, res) => {
-    if (req.params.status === "active") {
-        fs.readFile(`${frontend}/users.json`, (error, data) => {
-            if (error) {
-                res.send("Problem");
-            } else {
+    fs.readFile(`${frontend}/users.json`, (error, data) => {
+        if (error) {
+            res.send("Problem");
+        } else {
+            if (req.params.status === "active") {
                 const users = JSON.parse(data);
                 res.send(users.filter(user => user.status === "active"));
-            }
-        })
-    } else {
-        fs.readFile(`${frontend}/users.json`, (error, data) => {
-            if (error) {
-                res.send("Problem");
-            } else {
+            } else if (req.params.status === "passive"){
                 const users = JSON.parse(data);
                 res.send(users.filter(user => user.status === "passive"));
+            } else {
+                res.send(`${req.params.status} is not a valid user status`);
             }
-        })
-    }
+        }
+    })
 })
 
 /* app.get("/api/v1/users/active", (req, res) => {
