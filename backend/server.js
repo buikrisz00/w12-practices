@@ -6,8 +6,14 @@ const app = express();
 const frontend = path.join(`${__dirname}/../frontend`)
 const port = 9000;
 
+app.use(express.json());
+
 app.get("/", (req, res, next) => {
     console.log("Request received");
+    res.sendFile(`${frontend}/index.html`);
+});
+
+app.get("/admin/order-view", (req, res, next) => {
     res.sendFile(`${frontend}/index.html`);
 });
 
@@ -85,6 +91,28 @@ app.get("/api/v1/users/passive", (req, res) => {
         }
     })
 }) */
+
+app.post("/users/new", (req, res) => {
+    fs.readFile(`${frontend}/users.json`, (error, data) => {
+        if (error) {
+            console.log(error);
+            res.send("Error reading users file");
+        } else {
+            const users = JSON.parse(data);
+            console.log(req.body);
+            
+            users.push(req.body);
+
+            fs.writeFile(`${frontend}/users.json`, JSON.stringify(users), error => {
+                if (error) {
+                    console.log(error);
+                    res.send("Error writing users file");
+                }
+            })
+            res.send(req.body);
+        }
+    })
+})
 
 app.listen(port, () => {
     console.log(`http://127.0.0.1:${port}`);
